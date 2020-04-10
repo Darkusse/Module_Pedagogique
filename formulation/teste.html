@@ -29,16 +29,24 @@
 	
 	
 	<p id="p-obj">
+	
+		A l'issue de  <span id="g_span">{{ group_size }}</span>.
+		</span>	
+		
 		Les étudiants seront capables de 
 		<span id="ts_span">{{thinking_skill}}</span>
 	
-		<span id="_span">
-		{{#ittr content_modifiers}}
-			<span id="ts{{0}}">{{word}}</span>
-		{{/ittr}}		
-		</span> 				
-		<span id="c_span">{{content}}</span>
-		{{r_glue}}
+		
+
+		, en utilisant 
+		<span id="r_span">{{ resources }}</span>
+		
+		
+		</span>
+				
+		
+					
+	</p>
 				
 	</p>
 	</script>
@@ -126,11 +134,11 @@
 				}
 				if(p_o == "a")
 				{
-					a.push(aAn(new_p));					
+					a.push(a(new_p));					
 				}
 				else
 				{
-					a[a.length-1] = aAn(new_p);
+					a[a.length-1] = a(new_p);
 				}
 				
 				obj.set({"products": a });
@@ -140,9 +148,13 @@
 
 			$("#r .innerTab li").click(function(e){
 				e.preventDefault();				
-				obj.set({"resources": aAn($(e.currentTarget).text().toLowerCase())});
+				obj.set({"resources": $(e.currentTarget).text().toLowerCase()});
 				return false;
 			});
+			$("#g .innerTab li").click(function(e){
+				e.preventDefault();				
+				obj.set({"group_size": $(e.currentTarget).text().toLowerCase()});
+			});			
 
 					
 			window.obj = new Objective;
@@ -169,109 +181,83 @@
 	</div>	
 
 	<ul id="myTab" class="nav nav-tabs">
+	    <li><a id="g_tab"  href="#g_tabs" data-toggle="tab">Parcours</a></li>
 		<li><a id="ts_tab" href="#ts_tabs" data-toggle="tab">Verbe</a></li>
-		<li><a id="cm_tab" href="#cm_tabs" data-toggle="tab">Contenue</a></li>
-		<li><a id="rs_tab" href="#rs_tabs" data-toggle="tab">Resources</a></li>
+		<li><a id="cm_tab" href="#cm_tabs" data-toggle="tab">Contenu</a></li>
+		<li><a id="rs_tab" href="#rs_tabs" data-toggle="tab">Resource</a></li>
 		<li><a id="p_tab"  href="#p_tabs" data-toggle="tab">Products</a></li>
+		
 		
 	</ul>
 	
-		
-	
-	
+			
   </div>
   <br>
   <div class="tab-content">
-	  <div class="tab-pane active" id="ts_tabs">		
-			<ul class="unstyled"  id="ts" class="innerTabs">
+  	
+				
+				
+	  <div class="tab-pane active" id="ts_tabs">	  
+			<ul class="verbe"  id="ts" class="innerTabs">
 			<li class="innerTab">
 	            <h2>Connaissance</h2>
-	            <ul class="unstyled" >
+	            <ul class="verbe" >
 	                <li>mémoriser</li>
 	                <li>Lister</li>
 	                <li>Definir</li>
-	                <li>nommer</li>
-	                <li>Répéter</li>
 	                <li>identifier</li>
 					<li>reproduire</li>
 	            </ul>
 	        </li>
 	        <li class="innerTab">
 	            <h2>Compréhension</h2>
-	            <ul class="unstyled" >
+	            <ul class="verbe" >
 					<li>Classifier</li>
 					<li>Decrire</li>
 					<li>Discuter</li>
 					<li>Expliquer</li>
 					<li>Identifier</li>
-					<li>indiquer</li>
-					<li>Reconaître</li>
-					<li>Repporter</li>
-					<li>Situer</li>
-					<li>Traduire</li>
-					<li>reformuler</li>
 				</ul>
 			</li>
 			<li class="innerTab">
 	           <h2>Application</h2>
-	            <ul class="unstyled" >
-					<li>Choisir</li>
+	            <ul class="verbe" >
 					<li>Demontrer</li>
 					<li>schematiser</li>
-					<li>Emplyer</li>
 					<li>Illustrer</li>
-					<li>Interpreter</li>
-					<li>Operer</li>
 					<li>pratiquer</li>
-					<li>Resondre</li>
 					<li>Utiliser</li>
-					<li>planifier</li>
+
 				</ul>
 			</li>
 			<li class="innerTab">
 	           <h2>Analyse</h2>
-	            <ul class="unstyled" >
+	            <ul class="verbe" >
 					<li>Analyser</li>
 					<li>Comparer</li>
 					<li>Calculer</li>
-					<li>Categoriser</li>
-					<li>Differencier</li>
-					<li>Discriminer</li>
-					<li>Distinguer</li>
 					<li>Examiner</li>
-					<li>Experimenter</li>
-					<li>Questioner</li>
 					<li>Tester</li>
 				</ul>
 			</li>
 			<li class="innerTab">
 	           <h2>Synthése</h2>
-	            <ul class="unstyled" >
-					<li>Arranger</li>
-					<li>Assembler</li>
-					<li>Collecter</li>
+	            <ul class="verbe" >
 					<li>Composer</li>
 					<li>Construire</li>
-					<li>Concevoir</li>
-					<li>Devlopper</li>
 					<li>Formuler</li>
 					<li>Gerer</li>
 					<li>Planifier</li>
-					<li>Preparer</li>
 				</ul>
 			</li>
 			<li class="innerTab">
 	           <h2>évaluation</h2>
-	            <ul class="unstyled">
-	            <li>Arranger</li>
+	            <ul class="verbe">
+	        
 					<li>Argumenter</li>
 					<li>Evaluer</li>
-					<li>Rattache</li>
 					<li>Choisir</li>
 					<li>Comparer</li>
-					<li>Justifier</li>
-					<li>Estimer</li>
-					<li>Juger</li>
 					<li>Supporter</li>
 				</ul>
 			</li>
@@ -284,10 +270,10 @@
 				
 				
 			</div>
-			<ul class="unstyled"  id="cm" class="innerTabs">
+			<ul class="verbe"  id="cm" class="innerTabs">
 	        <li class="innerTab">
 	            <h2>Depth</h2>
-	            <ul class="unstyled" >
+	            <ul class="verbe" >
 	                <li>poser des Questions</li>
 	                <li>idee</li>
 	                <li>Regles</li>
@@ -299,7 +285,7 @@
 	        
 	        <li class="innerTab">
 	         <h2>Impératifs</h2>
-	            <ul class="unstyled" >
+	            <ul class="verbe" >
 	            	<li>Origine</li>
 	                <li>Convergence</li>
 	                <li>Parallels</li>
@@ -312,10 +298,10 @@
 	        <div class="bottom"></div>
 		</div>		
 		<div class="tab-pane" id="rs_tabs">
-		<ul class="unstyled"  id="r" class="innerTabs">
+		<ul class="verbe"  id="r" class="innerTabs">
 			<li class="innerTab">
 	            <h2>Hors ligne</h2>
-	            <ul class="unstyled" >
+	            <ul class="verbe" >
 	            	<li>Cahier de texte</li>
 	                <li>Livre</li>
 	                <li>Magasine</li>
@@ -326,7 +312,7 @@
 	        </li>
 	        <li class="innerTab">
 	            <h2>enligne</h2>
-	            <ul class="unstyled" >
+	            <ul class="verbe" >
 	            	<li>Site Web </li>
 					<li>Wikipedia</li>
 					<li>Google</li>
@@ -342,10 +328,10 @@
 			<div id="p_options">
 				
 			</div>			
-			<ul class="unstyled"  id="p" class="innerTabs">
+			<ul class="verbe"  id="p" class="innerTabs">
 				<li class="innerTab">
 		            <h2>Visuelle</h2>
-		            <ul class="unstyled" >
+		            <ul class="verbe" >
 		            <li>Graphique</li>
 		                <li>Dessin</li>
 		                <li>Chronologie</li>
@@ -356,29 +342,26 @@
 		        </li>
 		        <li class="innerTab">
 		            <h2>Construction</h2>
-		            <ul class="unstyled" >
+		            <ul class="verbe" >
 		        		<li>Model</li> 
 						<li>Sculpture</li> 
 						<li>Diorama</li>  
 						<li>Miniature</li>  
-						<li>Art Gallery</li> 
-						<li>Museum Exhibit</li>  
 						<li>Mobile</li> 
 					</ul>
 				</li>
 				<li class="innerTab">
 					<h2>Orale</h2>
-					<ul class="unstyled" >
+					<ul class="verbe" >
 			            <li>Debatre</li>
 						<li>Leçon</li>
 						<li>Rapport</li>
-						<li>Partie</li>
 						<li>Conférence de presse</li>
 					</ul>
 				</li>
 				<li class="innerTab">
 					<h2>Multimedia</h2>
-					<ul class="unstyled" >
+					<ul class="verbe" >
 			            <li>Son</li>
 						<li>Livre illustré</li>
 						<li>Journal</li>
@@ -391,6 +374,21 @@
 			<div class="bottom">	
 			</div>			
 		</div>
+		<div class="tab-pane" id="g_tabs">
+			<ul class="unstyled"  id="g" class="innerTabs">
+				<li class="innerTab">
+		            <h2>Parcours</h2>
+		            <ul class="unstyled" >
+			            <li>ce cours</li>
+			            <li>ce semestre</li>
+			            <li>cette année</li>
+			            <li>la formation</li>
+						<li>la seance</li>
+		            </ul>
+		        </li>
+		    </ul>
+			<div class="bottom"></div>
+		</div>	
 		
 	</div>
 
