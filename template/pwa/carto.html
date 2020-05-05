@@ -69,7 +69,7 @@
                     <div class="row">
                         <div class="col-4">
 
-                            <ul class="list-group" id="lstResUni"></ul>
+                            <ul class="list-group" id="lstUni"></ul>
 
                         </div>
                         <div class="col-8">
@@ -115,15 +115,15 @@
 
 
                                 // -------------------------------------------------------------------
-                                // DEBUT Chargement de la liste des résidence du Crous
+                                // la liste des universite
                                 // -------------------------------------------------------------------//
-                                var urlRes = "data/itemsLogementsCrous.json";
+                                var urlRes = "data/Univitems.json";
 
                                 d3.json(urlRes, {crossOrigin: "anonymous"}).then(function (data) {
                                         console.log(data);
 
                                         var select = d3
-                                            .select("#lstResUni")
+                                            .select("#lstUni")
                                             .append("select")
                                             .selectAll("option")
                                             .data(data)
@@ -150,8 +150,8 @@
 
                                             });
                                     });
-                                // ---------------------------------------------------------------------
-                                // FIN Chargement de la liste des résidence du Crous
+                        
+                                
                                 // -------------------------------------------------------------------//
 
 
