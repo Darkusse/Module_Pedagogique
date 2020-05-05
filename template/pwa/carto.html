@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>MEILO</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link rel="manifest" href="./manifest.json">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+		<link rel="apple-touch-icon" href="images/hello-icon-152.png">
+		<meta name="theme-color" content="white"/>
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="apple-mobile-web-app-title" content="Hello World">
+		<meta name="msapplication-TileImage" content="images/hello-icon-144.png">
+		<meta name="msapplication-TileColor" content="#FFFFFF">
+        <link href="css/flexslider.min.css" rel="stylesheet" type="text/css" media="all"/>
+        <link href="css/line-icons.min.css" rel="stylesheet" type="text/css" media="all"/>
+        <link href="css/elegant-icons.min.css" rel="stylesheet" type="text/css" media="all"/>
+        <link href="css/lightbox.min.css" rel="stylesheet" type="text/css" media="all"/>
+        <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all"/>
+        <link href="css/theme-1.css" rel="stylesheet" type="text/css" media="all"/>
+        <link href="css/custom.css" rel="stylesheet" type="text/css" media="all"/>
+        <!--[if gte IE 9]>
+        	<link rel="stylesheet" type="text/css" href="css/ie9.css" />
+		<![endif]-->
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300,600,700%7CRaleway:700' rel='stylesheet' type='text/css'>
+        <script src="js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        <link href="http://fonts.googleapis.com/css?family=Arimo:400,700,400italic" rel="stylesheet" type="text/css">
+        <link href="css/font-helvetica.css" rel="stylesheet" type="text/css">
+
+
+      
+        <script
+            src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+            integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+            crossorigin=""></script>
+
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+
+        <style>
+            #mapid {
+                height: 600px;
+            }
+        </style>
+
+    </head>
+
+    <body>
+
+        <!------ DEBUT NAVIGATION ---------->
+        <div id="wrapper" class="">
+            <div class="overlay" style="display: none;"></div>
+          
+            <div id="page-content-wrapper">
+                <button
+                    type="button"
+                    class="hamburger animated fadeInLeft is-closed"
+                    data-toggle="offcanvas">
+                    <span class="hamb-top"></span>
+                    <span class="hamb-middle"></span>
+                    <span class="hamb-bottom"></span>
+                </button>
+                <div class="container">
+                    <!------ DEBUT CONTENT ---------->
+
+                    <div class="row">
+                        <div class="col-4">
+
+                            <ul class="list-group" id="lstResUni"></ul>
+
+                        </div>
+                        <div class="col-8">
+                            <div id="mapid"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-8">
+
+                            <script>
+                                var lat = 48.946538,
+                                    lng = 2.3632178;
+                                var map = L
+                                    .map('mapid')
+                                    .setView([
+                                        lat, lng
+                                    ], 14);
+
+                                L .tileLayer('//{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+                                        attribution: 'donn&eacute;es &copy; <a href="//osm.org/copyright">OpenStreetMap</a>/ODbL - r' +
+                                                'endu <a href="//openstreetmap.fr">OSM France</a>',
+                                        minZoom: 1,
+                                        maxZoom: 20
+                                    })
+                                    .addTo(map);
+
+                                //récupère la géolocalisation de l'utilisateur
+                                var geo = false;
+                                if (navigator.geolocation) {
+                                    navigator
+                                        .geolocation
+                                        .getCurrentPosition(function (p) {
+                                            geo = p;
+                                            L
+                                                .marker([p.coords.latitude, p.coords.longitude])
+                                                .addTo(map);
+
+                                        });
+                                }
+
+
+
+
+                                // -------------------------------------------------------------------
+                                // DEBUT Chargement de la liste des résidence du Crous
+                                // -------------------------------------------------------------------//
+                                var urlRes = "data/itemsLogementsCrous.json";
+
+                                d3.json(urlRes, {crossOrigin: "anonymous"}).then(function (data) {
+                                        console.log(data);
+
+                                        var select = d3
+                                            .select("#lstResUni")
+                                            .append("select")
+                                            .selectAll("option")
+                                            .data(data)
+                                            .enter()
+                                            .append("option")
+                                            .html(d => {
+                                                return d["o:title"];
+
+                                            })
+
+                            //Relation click entre le menu et la carte et ajout du marker and zoom in 
+                               
+                                            .on("click", d => {
+                                                console.log(d);
+                                                let latlng = d["geo:lat_long"][0]["@value"].split(',');
+                                                let m = L
+                                                    .marker([
+                                                        latlng[0], latlng[1]
+                                                    ])
+                                                    .addTo(map);
+                                                var latLngs = [m.getLatLng()];
+                                                var markerBounds = L.latLngBounds(latLngs);
+                                                map.fitBounds(markerBounds);
+
+                                            });
+                                    });
+                                // ---------------------------------------------------------------------
+                                // FIN Chargement de la liste des résidence du Crous
+                                // -------------------------------------------------------------------//
+
+
+                               
+                              
+
+                                
+                            </script>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="js/navigation.js"></script>
+</body>
+<html>
