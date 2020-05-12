@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>MEILO</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+        <!--[if gte IE 9]>
+        	<link rel="stylesheet" type="text/css" href="css/ie9.css" />
+		<![endif]-->
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300,600,700%7CRaleway:700' rel='stylesheet' type='text/css'>
+       
+        <link href="http://fonts.googleapis.com/css?family=Arimo:400,700,400italic" rel="stylesheet" type="text/css">
+       
+
+       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="./css/style.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+        integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+            integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+            crossorigin=""/>
+
+        <!------ Debut de navigation ---------->
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+        <link
+            href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"
+            rel="stylesheet"
+            id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="css/navigation.css">
+        <!------ Include the above in your HEAD tag ---------->
+
+   
+      
+        <script
+            src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+            integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+            crossorigin=""></script>
+
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+
+        <style>
+            #mapid {
+                height: 600px;
+            }
+        </style>
+
+    </head>
+
+    <body>
+
+        <!------ DEBUT NAVIGATION ---------->
+        <div id="wrapper" class="">
+            <div class="overlay" style="display: none;"></div>
+          
+            
+                <div class="container">
+                    <!------ DEBUT CONTENT ---------->
+
+                    <div class="row">
+                        <div class="col-4">
+
+                            <ul class="list-group" id="lstUni"></ul>
+
+                        </div>
+                        <div class="col-8">
+                            <div id="mapid"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-8">
+
+                            <script>
+                                var lat = 48.946538,
+                                    lng = 2.3632178;
+                                var map = L
+                                    .map('mapid')
+                                    .setView([
+                                        lat, lng
+                                    ], 14);
+
+                                L .tileLayer('//{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+                                        attribution: 'donn&eacute;es &copy; <a href="//osm.org/copyright">OpenStreetMap</a>/ODbL - r' +
+                                                'endu <a href="//openstreetmap.fr">OSM France</a>',
+                                        minZoom: 1,
+                                        maxZoom: 20
+                                    })
+                                    .addTo(map);
+
+                                //récupère la géolocalisation de l'utilisateur
+                                var geo = false;
+                                if (navigator.geolocation) {
+                                    navigator.geolocation
+                                        .getCurrentPosition(function (p) {
+                                            geo = p;
+                                            L
+                                                .marker([p.coords.latitude, p.coords.longitude])
+                                                .addTo(map);
+
+                                        });
+                                }
+
+
+
+
+                                // -------------------------------------------------------------------
+                                // la liste des universite
+                                // -------------------------------------------------------------------//
+                                var urlRes = "data/univitems.json";
+
+                                d3.json(urlRes, {crossOrigin: "anonymous"}).then(function (data) {
+                                        console.log(data);
+										d3.select("#lstUni").selectAll('li').data(data).enter()
+										.append('li')
+										.attr('class', "list-group-item d-flex justify-content-between align-items-center")
+										
+										.html(d => {
+                                                return d["o:title"];
+
+                                            })
+								
+
+                            //liste des univeriste onclick
+                               
+                                            .on("click", d => {
+                                                console.log(d);
+                                                let latlng = (d["MeiloGeo:longitude"][0]["@value"], d["MeiloGeo:latitude"][0]["@value"]);
+                                                
+												let m = L.marker([
+                                                        latlng[0], latlng[0]]).addTo(map);
+                                                var latLngs = [m.getLatLng()];
+                                                var markerBounds = L.latLngBounds(latLngs);
+                                                map.fitBounds(markerBounds);
+
+                                            });
+                                    });
+                        
+                                
+                                // -------------------------------------------------------------------//
+
+											function centerLeafletMapOnMarker(map, marker) {
+											var latLngs = [ marker.getLatLng() ];
+									        var markerBounds = L.latLngBounds(latLngs);
+									        map.fitBounds(markerBounds);
+									         }
+																   
+                              
+
+                                
+                            </script>
+								
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="js/navigation.js"></script>
+</body>
+<html>
